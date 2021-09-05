@@ -6,7 +6,7 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 16:50:37 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 20:37:02 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 19:19:41 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,44 +19,52 @@ void	printstr(t_string str)
 	write(1, str, ft_strlen(str));
 }
 
-t_i8	check_executable(char **env, t_string cmd_exec0, t_string cmd_exec1)
+void	printstr_debug(t_string head, t_string str)
 {
-	t_string	path;
-	t_string	exec0;
-	t_string	exec1;
+	if (!str || !DEBUG)
+		return ;
+	write(1, head, ft_strlen(head));
+	write(1, str, ft_strlen(str));
+	write(1, END"\n", 6);
+}
 
-	path = get_path(env);
-	if (!path)
+// t_i8	check_executable(t_p *pipex)
+// {
+
+// 	exec1 = get_executable(pipex->path, pipex->cmd[1].exec);
+// 	if (!exec1)
+// 	{
+// 		printstr(BRED"\nExecutable not found.\n"END);
+// 		return (FALSE);
+// 	}
+// 	return (TRUE);
+// }
+
+t_i32	free_exit(t_p *pipex, t_i32 ret)
+{
+	t_i32	i;
+
+	i = -1;
+	while (pipex->path[++i])
 	{
-		printstr(BRED"Unable to get PATH for env.\n"END);
-		return (FALSE);
+		printstr_debug("["BYEL"FREE"END"] ", pipex->path[i]);
+		free(pipex->path[i]);
 	}
-	exec0 = get_executable(path, cmd_exec0);
-	if (!exec0)
-	{
-		free(path);
-		printstr(cmd_exec0);
-		printstr(BRED"\nExecutable not found.\n"END);
-		return (FALSE);
-	}
-	exec1 = get_executable(path, cmd_exec1);
-	if (!exec1)
-	{
-		free(path);
-		printstr(cmd_exec1);
-		printstr(BRED"\nExecutable not found.\n"END);
-		return (FALSE);
-	}
-	free(path);
-	return (TRUE);
+	free(pipex->path);
+	printstr_debug("["BYEL"FREE"END"] ", pipex->cmd[0].exec);
+	free(pipex->cmd[0].exec);
+	printstr_debug("["BYEL"FREE"END"] ", pipex->cmd[0].args);
+	free(pipex->cmd[0].args);
+	printstr_debug("["BYEL"FREE"END"] ", pipex->cmd[1].exec);
+	free(pipex->cmd[1].exec);
+	printstr_debug("["BYEL"FREE"END"] ", pipex->cmd[1].args);
+	free(pipex->cmd[1].args);
+	return (ret);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	(void)ac;
-	(void)av;
-	(void)env;
-
+	t_p	pipex;
 
 	if (ac != 5)
 	{
@@ -64,19 +72,46 @@ int	main(int ac, char **av, char **env)
 			printstr("Missing arguments\nPlease run with ./pipex [file1] [cmd1] [cmd2] [file2]\n");
 		if (ac > 5)
 			printstr("Too many arguments\nPlease run with ./pipex [file1] [cmd1] [cmd2] [file2]\n");
-		return (EXIT_ERROR);
+		return (EXIT_FAILURE);
 	}
 
+	ft_memset(&pipex, 0, sizeof(t_p));
+	pipex.env = env;
 
-//
-	// if (!check_infile(av[1]))
-	// {
-		// return (EXIT_ERROR);
-	// }
-//
-	// if (!write_oufile(av[4], "CHOCOLAT\n"))
-	// {
-		// return (EXIT_ERROR);
-	// }
-	return (EXIT_SUCCESS);
+	if (!path_set(&pipex))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+
+	if (!parse_cmd(&pipex, av[2]))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+	if (!parse_cmd(&pipex, av[3]))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+
+	if (!executable_set(&pipex, &pipex.cmd[0].exec))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+	if (!executable_set(&pipex, &pipex.cmd[1].exec))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+
+	if (!check_infile(av[1]))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+
+	if (!write_oufile(av[4], "CHOCOLAT\n"))
+	{
+		return (free_exit(&pipex, EXIT_FAILURE));
+	}
+
+	printstr_debug("["BGRN"OK"END"]", "");
+
+	return (free_exit(&pipex, EXIT_SUCCESS));
 }

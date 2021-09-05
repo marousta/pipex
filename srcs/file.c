@@ -6,11 +6,26 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 19:10:54 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 19:44:24 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 18:06:50 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+t_i8	check_fd(t_string file)
+{
+	const t_i32	fd = open(file, O_RDONLY);
+
+	if (fd == ERROR)
+		return (FALSE);
+	if (read(fd, NULL, 0) == ERROR)
+	{
+		close(fd);
+		return (FALSE);
+	}
+	close(fd);
+	return (TRUE);
+}
 
 t_i8	check_infile(t_string filename)
 {

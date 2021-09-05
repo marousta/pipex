@@ -6,60 +6,49 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 20:24:22 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 20:24:30 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 19:52:52 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_string	get_path(char **env)
+t_string	executable_get(t_p *pipex, t_string exec_name)
 {
+	t_string	exec_path;
 	t_i32		i;
-	t_string	path;
 
 	i = -1;
-	while (env[++i])
+	while (pipex->path[++i])
 	{
-		if (!env[i][0] || !env[i][1] || !env[i][2] || !env[i][3] || !env[i][4])
-			continue ;
-		if (env[i][0] == 'P' && env[i][1] == 'A' && env[i][2] == 'T' && env[i][3] == 'H' && env[i][4] == '=')
-		{
-			path = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
-			if (!path)
-				return (NULL);
-			return (path);
-		}
+		exec_path = ft_strjoin(pipex->path[i], exec_name);
+		if (!exec_path)
+			return (NULL);
+		if (check_fd(exec_path))
+			return (exec_path);
+		free(exec_path);
 	}
 	return (NULL);
 }
 
-t_string	get_executable(t_string path, t_string exec_name)
+t_i8	executable_set(t_p *pipex, t_string *cmd_exec)
 {
-	t_string	*bin_path;
-	t_string	exec_path;
-	t_i32		fd;
-	t_i32		i;
+	const t_i8	fd = check_fd(*cmd_exec);
+	t_string	exec;
 
-	bin_path = ft_split(path, ':');
-	if (!bin_path)
-		return (NULL);
-	i = -1;
-	while (bin_path[++i])
+	if (!*cmd_exec)
 	{
-		exec_path = ft_strjoin(bin_path[i], exec_name);
-		if (!exec_path)
-		{
-			free(bin_path);
-			return (NULL);
-		}
-		fd = open(exec_path, O_RDONLY);
-		if (fd != ERROR)
-		{
-			close(fd);
-			return (exec_path);
-		}
-		free(exec_path);
-		close(fd);
+		printstr(BRED"No executable provided.\n"END);
+		return (FALSE);
 	}
-	return (NULL);
+	if ((*cmd_exec[0] == '/' && fd) || fd)
+		return (TRUE);
+	exec = executable_get(pipex, *cmd_exec);
+	if (!exec)
+	{
+		printstr(BRED"Executable not found.\n"END);
+		return (FALSE);
+	}
+	free(*cmd_exec);
+	*cmd_exec = exec;
+	return (TRUE);
 }

@@ -6,7 +6,7 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 17:38:09 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 20:25:00 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 19:53:15 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ typedef	char* t_string;
 # define END	"\e[0m"
 # define ERASE	"\033[2K"
 
+# define DEBUG 1
+
 # define TRUE 1
 # define FALSE 0
 # define ERROR -1
-# define EXIT_SUCCESS 0
-# define EXIT_ERROR 1
 
 # include <stdio.h>
 # include <unistd.h>
@@ -48,6 +48,19 @@ typedef	char* t_string;
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+
+typedef struct	s_parse_cmd {
+	t_string	exec;
+	t_string	args;
+} t_parse_cmd;
+
+typedef struct	s_p {
+	t_i32		file_fd[2];
+	t_i32		pipe_fd[2];
+	t_string	*path;
+	t_parse_cmd	cmd[2];
+	t_string	*env;
+} t_p;
 
 t_i32	ft_strlen(t_string str);
 void	*ft_calloc(t_u64 count, t_u64 size);
@@ -60,11 +73,15 @@ t_string	ft_strjoin(const t_string s1, const t_string s2);
 
 void	printstr(t_string str);
 
+t_i8	check_fd(t_string file);
 t_i8	check_infile(t_string filename);
 t_i8	write_oufile(t_string filename, t_string text);
 
-t_string	get_path(char **env);
-t_string	get_executable(t_string path, t_string exec_name);
+t_i8	path_set(t_p *pipex);
 
+t_i8	parse_cmd(t_p *pipex, t_string cmd);
+
+t_string	executable_get(t_p *pipex, t_string exec_name);
+t_i8		executable_set(t_p *pipex, t_string *exec_name);
 
 #endif

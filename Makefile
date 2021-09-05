@@ -6,7 +6,7 @@
 #    By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/17 13:04:30 by marousta          #+#    #+#              #
-#    Updated: 2021/09/04 20:24:44 by marousta         ###   ########lyon.fr    #
+#    Updated: 2021/09/05 19:10:19 by marousta         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,8 @@ CFLAGS		= -Wall -Wextra -Werror
 DIR_OBJS	= .objs
 INCLUDES	= includes
 
+HEADERS		= $(INCLUDES)/pipex.h
+
 SRCS		=	srcs/ft_strlen.c \
 				srcs/ft_memset.c	\
 				srcs/ft_calloc.c	\
@@ -47,7 +49,9 @@ SRCS		=	srcs/ft_strlen.c \
 				srcs/ft_split.c	\
 				srcs/ft_strjoin.c \
 				srcs/file.c	\
+				srcs/path.c	\
 				srcs/find_exec.c	\
+				srcs/parse_cmd.c	\
 				srcs/main.c	\
 
 DIR_SRCS	= ${SRCS}
@@ -56,7 +60,7 @@ OBJS		= ${SRCS:%.c=${DIR_OBJS}/%.o}
 
 ###############
 
-${DIR_OBJS}/%.o:%.c
+${DIR_OBJS}/%.o:%.c ${HEADERS}
 	@printf "\r%s\n" "[${YELLOW}Infos${NORMAL}] ${CC} ${CFLAGS} -I ${INCLUDES} -c $< -o $@"
 	@printf "\033[K%s" "${PURPLE}${BOLD}[ $(TOTAL_PERCENTAGE)% ]	${NORMAL}${WHITE}Building ${GREEN}$@ ${NORMAL}"
 	@${CC} ${CFLAGS} -I ${INCLUDES} -c $< -o $@
