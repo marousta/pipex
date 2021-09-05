@@ -6,11 +6,17 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 19:10:54 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/05 18:06:50 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 21:36:47 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	close_fd(t_i32 *fd)
+{
+	close(*fd);
+	*fd = 0;
+}
 
 t_i8	check_fd(t_string file)
 {
@@ -27,7 +33,7 @@ t_i8	check_fd(t_string file)
 	return (TRUE);
 }
 
-t_i8	check_infile(t_string filename)
+t_i8	infile_set(t_p *pipex, t_string filename)
 {
 	const t_i32 fd = open(filename, O_RDONLY);
 
@@ -43,11 +49,11 @@ t_i8	check_infile(t_string filename)
 		printstr(BRED"Input file is a directory.\n"END);
 		return (FALSE);
 	}
-	close(fd);
+	pipex->file_fd[0] = fd;
 	return (TRUE);
 }
 
-t_i8	write_oufile(t_string filename, t_string text)
+t_i8	outfile_set(t_p *pipex, t_string filename)
 {
 	const t_i32 fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 644);
 
@@ -57,12 +63,12 @@ t_i8	write_oufile(t_string filename, t_string text)
 		printstr("A folder with the same name may already exist..\n"END);
 		return (FALSE);
 	}
-	if (write(fd, text, ft_strlen(text)) == ERROR)
+	if (write(fd, "", 0) == ERROR)
 	{
 		close(fd);
 		printstr(BRED"A write error occured when writting output file.\n"END);
 		return (FALSE);
 	}
-	close(fd);
+	pipex->file_fd[1] = fd;
 	return (TRUE);
 }

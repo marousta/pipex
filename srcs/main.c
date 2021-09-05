@@ -6,7 +6,7 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 16:50:37 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/05 19:19:41 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 21:29:01 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ t_i32	free_exit(t_p *pipex, t_i32 ret)
 	free(pipex->cmd[1].exec);
 	printstr_debug("["BYEL"FREE"END"] ", pipex->cmd[1].args);
 	free(pipex->cmd[1].args);
+	if (pipex->file_fd[0])
+		close(pipex->file_fd[0]);
+	if (pipex->file_fd[1])
+		close(pipex->file_fd[1]);
 	return (ret);
 }
 
@@ -101,12 +105,12 @@ int	main(int ac, char **av, char **env)
 		return (free_exit(&pipex, EXIT_FAILURE));
 	}
 
-	if (!check_infile(av[1]))
+	if (!infile_set(&pipex, av[1]))
 	{
 		return (free_exit(&pipex, EXIT_FAILURE));
 	}
 
-	if (!write_oufile(av[4], "CHOCOLAT\n"))
+	if (!outfile_set(&pipex, av[4]))
 	{
 		return (free_exit(&pipex, EXIT_FAILURE));
 	}

@@ -6,7 +6,7 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 17:38:09 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/05 19:53:15 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/05 21:29:07 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ t_string	ft_strjoin(const t_string s1, const t_string s2);
 void	printstr(t_string str);
 
 t_i8	check_fd(t_string file);
-t_i8	check_infile(t_string filename);
-t_i8	write_oufile(t_string filename, t_string text);
+t_i8	infile_set(t_p *pipex, t_string filename);
+t_i8	outfile_set(t_p *pipex, t_string filename);
 
 t_i8	path_set(t_p *pipex);
 
