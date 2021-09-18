@@ -6,13 +6,13 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 15:04:10 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 19:41:11 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/18 20:02:17 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static t_i32		ft_tab_size(const t_string s, char c)
+static t_i32	ft_tab_size(const t_string s, char c)
 {
 	t_i32		i;
 	t_i32		size;
@@ -30,7 +30,7 @@ static t_i32		ft_tab_size(const t_string s, char c)
 	return (size);
 }
 
-static t_string		*free_tab(t_string *tab, t_i32 index)
+static t_string	*free_tab(t_string *tab, t_i32 index)
 {
 	t_i32		i;
 
@@ -41,7 +41,7 @@ static t_string		*free_tab(t_string *tab, t_i32 index)
 	return (0);
 }
 
-static t_string		*put_word(const t_string s, char c, t_string *tab, t_i32 i)
+static t_string	*put_word(const t_string s, char c, t_string *tab, t_i32 i)
 {
 	t_i32		y;
 	t_i32		index;
@@ -68,7 +68,7 @@ static t_string		*put_word(const t_string s, char c, t_string *tab, t_i32 i)
 	return (tab);
 }
 
-t_string		*ft_split(const t_string s, char c)
+t_string	*ft_split(const t_string s, char c)
 {
 	t_string	*tab;
 	t_i32		tab_size;

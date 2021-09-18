@@ -6,18 +6,30 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/05 18:01:56 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/05 19:04:16 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/18 18:14:47 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+static t_string	*split_args(t_string cmd)
+{
+	t_string	*ret;
+
+	ret = NULL;
+	ft_memset(ret, 0, sizeof(t_string *));
+	ret = ft_split(cmd, 32);
+	if (!ret)
+		return (NULL);
+	return (ret);
+}
 
 static t_i8	parse_cmd_loop(t_string cmd, t_i32 i, t_parse_cmd *alt)
 {
 	if (cmd[i] == 32)
 	{
 		alt->exec = ft_substr(cmd, 0, i);
-		alt->args = ft_substr(cmd, i, ft_strlen(cmd) - i);
+		alt->args = split_args(cmd);
 		if (!alt->exec || !alt->args)
 		{
 			printstr(BRED"Error happened when parsing command with args.\n"END);

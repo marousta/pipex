@@ -1,42 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/09 15:04:15 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 19:38:24 by marousta         ###   ########lyon.fr   */
+/*   Created: 2021/09/18 19:22:41 by marousta          #+#    #+#             */
+/*   Updated: 2021/09/18 19:23:37 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_string	ft_strjoin(const t_string s1, const t_string s2)
+static t_i8	exec_waitpid(t_i32 *pid)
 {
-	t_i32		i;
-	t_string	str;
-	t_i32		str_len;
-	t_i32		s1_len;
+	t_i32	status;
 
-	if (!s1 || !s2)
-		return (NULL);
-	i = 0;
-	s1_len = ft_strlen(s1);
-	str_len = s1_len + ft_strlen(s2);
-	str = ft_calloc(sizeof(char), (str_len + 1));
-	if (!str)
-		return (0);
-	while (s1[i])
+	waitpid(pid[0], &status, 0);
+	if (status)
 	{
-		str[i] = s1[i];
-		i++;
+		printstr(BRED"execve0: command failed.\n"END);
+		return (FALSE);
 	}
-	i = 0;
-	while (s2[i])
+	waitpid(pid[1], &status, 0);
+	if (status)
 	{
-		str[s1_len + i] = s2[i];
-		i++;
+		printstr(BRED"execve1: command failed.\n"END);
+		return (FALSE);
 	}
-	return (str);
+	return (TRUE);
+}
+
+t_i8	exec_pipe(t_p *p)
+{
+	t_i32	pid[2];
+
+	pipe(p->pipe_fd);
+	if (!fork_first(p, pid))
+		return (FALSE);
+	return (exec_waitpid(pid));
 }

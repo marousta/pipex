@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   printstr.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/04 19:10:19 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/04 19:10:29 by marousta         ###   ########lyon.fr   */
+/*   Created: 2021/09/18 19:56:27 by marousta          #+#    #+#             */
+/*   Updated: 2021/09/18 19:56:47 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_i32	ft_strlen(t_string str)
+void	printstr(t_string str)
 {
-	t_i32	i;
+	if (!str)
+		return ;
+	write(1, str, ft_strlen(str));
+}
 
-	i = 0;
-	while (str[i])
-		++i;
-	return (i);
+void	printstr_debug(t_string head, t_string str)
+{
+	if (!DEBUG)
+		return ;
+	if (str)
+	{
+		write(1, head, ft_strlen(head));
+		write(1, str, ft_strlen(str));
+	}
+	else
+	{
+		write(1, head, ft_strlen(head));
+		write(1, "(null)", 7);
+	}
+	write(1, END"\n", 6);
 }

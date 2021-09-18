@@ -6,13 +6,19 @@
 #    By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/17 13:04:30 by marousta          #+#    #+#              #
-#    Updated: 2021/09/05 19:10:19 by marousta         ###   ########lyon.fr    #
+#    Updated: 2021/09/18 20:28:13 by marousta         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 #Fork of https://git.42l.fr/jorun/superlibft/src/branch/master/Makefile
 
 SHELL		= /bin/bash
+
+ifeq ($(shell uname), Darwin)
+	TAC = tail -r
+else
+	TAC = tac
+endif
 
 BLACK		= $(shell tput -Txterm setaf 0)
 RED			= $(shell tput -Txterm setaf 1)
@@ -35,24 +41,26 @@ TOTAL_PERCENTAGE		= ${shell echo $$(( ${TOTAL_PERCENTAGE_RAW} ))}
 
 NAME		= pipex
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -fsanitize=address
 
 DIR_OBJS	= .objs
 INCLUDES	= includes
 
 HEADERS		= $(INCLUDES)/pipex.h
 
-SRCS		=	srcs/ft_strlen.c \
-				srcs/ft_memset.c	\
-				srcs/ft_calloc.c	\
-				srcs/ft_substr.c	\
-				srcs/ft_split.c	\
-				srcs/ft_strjoin.c \
-				srcs/file.c	\
-				srcs/path.c	\
-				srcs/find_exec.c	\
-				srcs/parse_cmd.c	\
-				srcs/main.c	\
+SRCS		=	\
+				srcs/exec.c					\
+				srcs/file.c					\
+				srcs/find_exec.c			\
+				srcs/fork.c					\
+				srcs/free.c					\
+				srcs/ft_split.c				\
+				srcs/libft_lite_addons.c	\
+				srcs/libft_lite.c			\
+				srcs/main.c					\
+				srcs/parse_cmd.c			\
+				srcs/path.c					\
+				srcs/printstr.c				\
 
 DIR_SRCS	= ${SRCS}
 
@@ -85,7 +93,7 @@ ${NAME}: ${OBJS}
 	@printf "\r\033[K%s\n" "${WHITE}${NAME}: ${BOLD}${GREEN}ready ${NORMAL}"
 
 clean:
-	@find .objs -exec printf "%s\n" "[${RED}Deleting${NORMAL}] {}" \; | tac
+	@find .objs -exec printf "%s\n" "[${RED}Deleting${NORMAL}] {}" \; | $(TAC)
 	@rm -rf ${DIR_OBJS}
 
 fclean:	clean

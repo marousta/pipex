@@ -6,7 +6,7 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/05 17:50:04 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/05 18:06:10 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/18 20:03:12 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ static t_string	path_get(char **env)
 	{
 		if (!env[i][0] || !env[i][1] || !env[i][2] || !env[i][3] || !env[i][4])
 			continue ;
-		if (env[i][0] == 'P' && env[i][1] == 'A' && env[i][2] == 'T' && env[i][3] == 'H' && env[i][4] == '=')
+		if (env[i][0] == 'P'
+			&& env[i][1] == 'A'
+			&& env[i][2] == 'T'
+			&& env[i][3] == 'H'
+			&& env[i][4] == '=')
 		{
 			path = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
 			if (!path)
