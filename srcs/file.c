@@ -6,7 +6,7 @@
 /*   By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/04 19:10:54 by marousta          #+#    #+#             */
-/*   Updated: 2021/09/18 20:01:24 by marousta         ###   ########lyon.fr   */
+/*   Updated: 2021/09/20 16:45:44 by marousta         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_i8	infile_set(t_p *pipex, t_string filename)
 
 t_i8	outfile_set(t_p *pipex, t_string filename)
 {
-	const t_i32	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 644);
+	const t_i32	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0b110100100);
 
 	if (fd == ERROR)
 	{

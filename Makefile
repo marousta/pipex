@@ -6,7 +6,7 @@
 #    By: marousta <marousta@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/17 13:04:30 by marousta          #+#    #+#              #
-#    Updated: 2021/09/18 20:28:13 by marousta         ###   ########lyon.fr    #
+#    Updated: 2021/09/20 16:19:29 by marousta         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ BOLD		= $(shell tput bold)
 NORMAL		= $(shell tput sgr0)
 ERASE		= "\r\033[K"
 
-TOTAL_BUILD				= ${words srcs}
+TOTAL_BUILD				= ${shell find srcs -type f -name "*.c" | wc -l}
 TOTAL_BUILT				= 0
 TOTAL_PERCENTAGE_RAW	= ${TOTAL_BUILT} * 100 / ${TOTAL_BUILD}
 TOTAL_PERCENTAGE		= ${shell echo $$(( ${TOTAL_PERCENTAGE_RAW} ))}
